@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kravex — AI Systems That Close</title>
+<meta name="description" content="Kravex builds AI lead systems for businesses that are tired of losing clients to slow response times and missed follow-ups.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kravex.css">
+</head>
+<body>
+<style>
+
+  
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:#060606;color:#EDEBE6;font-family:'Inter',sans-serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:8px;height:8px;background:#C9943A;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s}
+#cur-r{position:fixed;width:32px;height:32px;border:1px solid rgba(201,148,58,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s}
+body:has(a:hover) #cur,body:has(button:hover) #cur{width:16px;height:16px}
+body:has(a:hover) #cur-r,body:has(button:hover) #cur-r{width:48px;height:48px}
+
+/* ── NOISE ── */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");pointer-events:none;z-index:998}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 60px;height:72px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(6,6,6,.9);backdrop-filter:blur(24px)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#EDEBE6;text-decoration:none;letter-spacing:-.5px}
+.nav-logo b{color:#C9943A}
+.nav-links{display:flex;align-items:center;gap:36px}
+.nav-links a{font-size:12px;color:rgba(237,235,230,.4);text-decoration:none;letter-spacing:.08em;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-btn{
+  padding:9px 22px;
+  border:1px solid #C9943A;
+  font-size:11px;
+  background-color: #C9943A;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  text-decoration:none;
+  transition:all .2s;
+  font-family:'Inter',sans-serif;
+}
+.nav-btn:hover{
+  color:#ffffff;
+  cursor: pointer;
+  background-color: #543806;
+  border: 1px solid #543806;
+}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:120px 60px 80px;gap:80px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(201,148,58,.08) 0%,transparent 70%);right:-100px;top:50%;transform:translateY(-50%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent)}
+
+.hero-left{}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(237,235,230,.4);margin-bottom:40px}
+.hero-eyebrow-dot{width:6px;height:6px;background:#C9943A;border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(44px,5.5vw,72px);line-height:.95;letter-spacing:-2.5px;margin-bottom:32px;opacity:0;animation:up .7s ease forwards .2s}
+.hero h1 .outline{-webkit-text-stroke:1px #C9943A;color:transparent}
+.hero-desc{font-size:15px;line-height:1.75;color:rgba(237,235,230,.55);max-width:440px;margin-bottom:48px;opacity:0;animation:up .7s ease forwards .4s;font-weight:300}
+.hero-actions{display:flex;gap:14px;align-items:center;opacity:0;animation:up .7s ease forwards .55s}
+.btn-gold{padding:14px 36px;background:#C9943A;color:#060606;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:all .2s;display:inline-block;border:none;cursor:none}
+.btn-gold:hover{background:#E0AA50;transform:translateY(-1px)}
+.btn-line{padding:14px 36px;border:1px solid rgba(255,255,255,.12);color:rgba(237,235,230,.5);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:all .2s;display:inline-block}
+.btn-line:hover{border-color:#C9943A;color:#C9943A}
+
+.hero-right{position:relative;opacity:0;animation:up .8s ease forwards .6s}
+.hero-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);padding:32px;position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#C9943A,transparent)}
+.card-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(237,235,230,.3);margin-bottom:24px}
+.card-metric{font-family:'Syne',sans-serif;font-size:56px;font-weight:800;color:#C9943A;letter-spacing:-3px;line-height:1}
+.card-metric-label{font-size:13px;color:rgba(237,235,230,.4);margin-top:8px;font-weight:300}
+.card-divider{height:1px;background:rgba(255,255,255,.06);margin:24px 0}
+.card-row{display:flex;justify-content:space-between;align-items:center}
+.card-stat-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#EDEBE6;letter-spacing:-1px}
+.card-stat-label{font-size:11px;color:rgba(237,235,230,.35);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+
+/* Live indicator */
+.live-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(237,235,230,.35);margin-top:20px}
+.live-dot{width:5px;height:5px;background:#4CAF50;border-radius:50%;animation:pulse 1.5s ease infinite}
+
+/* ── TICKER ── */
+.ticker{border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);padding:16px 0;overflow:hidden;background:#040404}
+.ticker-track{display:flex;animation:ticker 22s linear infinite;white-space:nowrap}
+.ticker-item{display:flex;align-items:center;gap:28px;padding:0 28px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(237,235,230,.25);flex-shrink:0}
+.ticker-sep{color:#C9943A;font-size:8px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTIONS ── */
+section{padding:120px 60px}
+.sec-label{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#C9943A;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-label::before{content:'';width:20px;height:1px;background:#C9943A}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(36px,4.5vw,54px);font-weight:800;letter-spacing:-2px;line-height:1.02;margin-bottom:16px}
+.sec-sub{font-size:15px;color:rgba(237,235,230,.45);line-height:1.7;max-width:520px;font-weight:300}
+
+/* ── PROBLEM ── */
+.problem{border-top:1px solid rgba(255,255,255,.06)}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:72px;background:rgba(255,255,255,.04)}
+.problem-item{background:#060606;padding:48px 44px;position:relative;overflow:hidden;transition:background .3s}
+.problem-item:hover{background:#0a0a0a}
+.problem-item::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:#C9943A;transition:width .5s ease}
+.problem-item:hover::after{width:100%}
+.problem-icon{font-size:32px;margin-bottom:24px}
+.problem-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:12px;letter-spacing:-.5px}
+.problem-desc{font-size:13px;line-height:1.8;color:rgba(237,235,230,.45);font-weight:300}
+
+/* ── SOLUTION ── */
+.solution{border-top:1px solid rgba(255,255,255,.06);background:#040404}
+.solution-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:72px;flex-wrap:wrap;gap:32px}
+.solution-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.04)}
+.sol-card{background:#040404;padding:48px 40px;position:relative;overflow:hidden;transition:background .3s}
+.sol-card:hover{background:#080808}
+.sol-num{font-family:'Syne',sans-serif;font-size:11px;letter-spacing:.2em;color:rgba(201,148,58,.5);margin-bottom:36px}
+.sol-icon{width:44px;height:44px;border:1px solid rgba(201,148,58,.2);display:flex;align-items:center;justify-content:center;margin-bottom:28px;font-size:20px}
+.sol-title{font-family:'Syne',sans-serif;font-size:21px;font-weight:700;letter-spacing:-.5px;margin-bottom:14px}
+.sol-desc{font-size:13px;line-height:1.85;color:rgba(237,235,230,.45);font-weight:300}
+.sol-outcome{margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.05);font-size:12px;color:#C9943A;letter-spacing:.05em}
+
+/* ── HOW ── */
+.how{border-top:1px solid rgba(255,255,255,.06)}
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:72px;position:relative}
+.how-steps::before{content:'';position:absolute;top:28px;left:14%;right:14%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,148,58,.3),rgba(201,148,58,.3),transparent);z-index:0}
+.how-step{padding:0 32px;position:relative;z-index:1}
+.how-step-num{width:56px;height:56px;border:1px solid rgba(201,148,58,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#C9943A;margin-bottom:28px;background:#060606}
+.how-step-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:12px;letter-spacing:-.3px}
+.how-step-desc{font-size:13px;line-height:1.8;color:rgba(237,235,230,.4);font-weight:300}
+
+/* ── PRICING ── */
+.pricing{border-top:1px solid rgba(255,255,255,.06);background:#040404}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:72px;background:rgba(255,255,255,.04)}
+.p-card{background:#040404;padding:52px 44px;position:relative;transition:background .3s}
+.p-card:hover{background:#080808}
+.p-card.star{background:#080808;border-top:2px solid #C9943A}
+.p-badge{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#C9943A;margin-bottom:32px}
+.p-price{font-family:'Syne',sans-serif;font-size:52px;font-weight:800;letter-spacing:-3px;line-height:1;margin-bottom:6px}
+.p-per{font-size:16px;color:rgba(237,235,230,.3);font-weight:300;font-family:'Inter',sans-serif;letter-spacing:0}
+.p-name{font-family:'Syne',sans-serif;font-size:19px;font-weight:700;margin:24px 0 10px;letter-spacing:-.3px}
+.p-desc{font-size:13px;line-height:1.75;color:rgba(237,235,230,.4);margin-bottom:36px;font-weight:300}
+.p-list{list-style:none}
+.p-list li{font-size:12px;color:rgba(237,235,230,.45);padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.p-list li::before{content:'→';color:#C9943A;flex-shrink:0;margin-top:1px}
+.p-cta{margin-top:36px}
+
+/* ── ABOUT ── */
+.about{border-top:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:start}
+.about-tag{display:inline-block;border:1px solid rgba(201,148,58,.3);padding:6px 14px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#C9943A;margin-bottom:36px}
+.about-headline{font-family:'Syne',sans-serif;font-size:clamp(36px,4vw,50px);font-weight:800;letter-spacing:-2px;line-height:1;margin-bottom:32px}
+.about-headline span{-webkit-text-stroke:1px rgba(201,148,58,.6);color:transparent}
+.about-body p{font-size:14px;line-height:1.85;color:rgba(237,235,230,.5);margin-bottom:18px;font-weight:300}
+.about-body p strong{color:#EDEBE6;font-weight:500}
+.about-body p.gold{color:#C9943A;font-size:13px;margin-top:8px}
+.about-right{}
+.trust-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);padding:36px;margin-bottom:3px}
+.trust-box-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(237,235,230,.25);margin-bottom:20px}
+.trust-metric{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:#C9943A;letter-spacing:-2px;line-height:1}
+.trust-metric-sub{font-size:12px;color:rgba(237,235,230,.35);margin-top:6px;font-weight:300}
+.trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.trust-sm{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);padding:28px 32px}
+
+/* ── CONTACT ── */
+.contact{border-top:1px solid rgba(255,255,255,.06);text-align:center;background:#040404;position:relative;overflow:hidden}
+.contact-glow{position:absolute;width:800px;height:400px;background:radial-gradient(ellipse,rgba(201,148,58,.05) 0%,transparent 70%);bottom:-100px;left:50%;transform:translateX(-50%);pointer-events:none}
+.contact h2{font-family:'Syne',sans-serif;font-size:clamp(48px,7vw,88px);font-weight:800;letter-spacing:-4px;line-height:.92;margin-bottom:32px;position:relative}
+.contact h2 span{-webkit-text-stroke:1px rgba(201,148,58,.4);color:transparent}
+.contact-sub{font-size:15px;color:rgba(237,235,230,.4);max-width:480px;margin:0 auto 64px;line-height:1.7;font-weight:300;position:relative}
+.contact-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;max-width:700px;margin:0 auto;background:rgba(255,255,255,.04);position:relative}
+.c-card{background:#040404;padding:36px 32px;text-decoration:none;color:#EDEBE6;transition:background .25s;display:flex;flex-direction:column;align-items:center;gap:10px}
+.c-card:hover{background:#080808}
+.c-icon{font-size:26px}
+.c-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(237,235,230,.25)}
+.c-val{font-size:13px;color:#C9943A;font-weight:400}
+
+/* ── FOOTER ── */
+footer{padding:28px 60px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:rgba(237,235,230,.3);letter-spacing:-.3px}
+.footer-logo b{color:#C9943A}
+.footer-copy{font-size:11px;color:rgba(237,235,230,.2);letter-spacing:.05em}
+.footer-right{font-size:11px;color:rgba(237,235,230,.2)}
+
+/* ── UTILS ── */
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  nav{padding:0 32px}
+  .hero{grid-template-columns:1fr;padding:100px 32px 60px;gap:60px}
+  .hero-right{display:none}
+  section{padding:80px 32px}
+  .problem-grid,.solution-cards,.pricing-grid,.trust-grid{grid-template-columns:1fr}
+  .how-steps{grid-template-columns:1fr 1fr;gap:40px}
+  .how-steps::before{display:none}
+  .about{grid-template-columns:1fr;gap:60px;padding:80px 32px}
+  .contact-cards{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:16px;text-align:center;padding:24px 32px}
+  .nav-links{display:none}
+}
+
+</style>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Kra<b>vex</b></a>
+  <div class="nav-links">
+    <a href="#solution">What We Do</a>
+    <a href="#how">How It Works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#about">About</a>
+    <button class="nav-btn">Get Started</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-dot"></div>
+      Open for new clients · Worldwide
+    </div>
+
+   <h1>
+  Turn More Visitors<br>
+  Into Paying Clients —<br>
+  <span class="outline">Automatically.</span>
+</h1>
+
+ <p class="hero-desc">
+  We build AI lead systems that capture, qualify, and follow up with every visitor — 
+  so you stop losing leads and start converting them into paying clients on autopilot.
+</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-gold">Build My System →</a>
+      <a href="#how" class="btn-line">See How It Works</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-card">
+      <div class="card-label">System Performance · Live</div>
+      <div class="card-metric">0s</div>
+      <div class="card-metric-label">Average response time to new leads</div>
+      <div class="card-divider"></div>
+      <div class="card-row">
+        <div>
+          <div class="card-stat-num">24/7</div>
+          <div class="card-stat-label">Always Active</div>
+        </div>
+        <div style="text-align:center">
+          <div class="card-stat-num">100%</div>
+          <div class="card-stat-label">Leads Captured</div>
+        </div>
+        <div style="text-align:right">
+          <div class="card-stat-num">3x</div>
+          <div class="card-stat-label">More Conversions</div>
+        </div>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        System running · No leads missed
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="ticker-item">Lead Capture <span class="ticker-sep">✦</span> Instant Qualification <span class="ticker-sep">✦</span> Auto Follow-Up <span class="ticker-sep">✦</span> 24/7 Active <span class="ticker-sep">✦</span> Zero Missed Enquiries <span class="ticker-sep">✦</span> Built in Days <span class="ticker-sep">✦</span> USD Pricing <span class="ticker-sep">✦</span> No Bloated Agencies <span class="ticker-sep">✦</span> Real Results <span class="ticker-sep">✦</span> Worldwide Clients <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Lead Capture <span class="ticker-sep">✦</span> Instant Qualification <span class="ticker-sep">✦</span> Auto Follow-Up <span class="ticker-sep">✦</span> 24/7 Active <span class="ticker-sep">✦</span> Zero Missed Enquiries <span class="ticker-sep">✦</span> Built in Days <span class="ticker-sep">✦</span> USD Pricing <span class="ticker-sep">✦</span> No Bloated Agencies <span class="ticker-sep">✦</span> Real Results <span class="ticker-sep">✦</span> Worldwide Clients <span class="ticker-sep">✦</span></div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="sec-label">The Problem</div>
+  <h2 class="sec-title">You're Losing Clients<br>Every Single Day.</h2>
+  <p class="sec-sub">Not because your service is bad. Because the way most businesses handle leads is broken.</p>
+
+  <div class="problem-grid reveal">
+    <div class="problem-item">
+      <div class="problem-icon">⏱</div>
+      <div class="problem-title">You Respond Too Slow</div>
+      <p class="problem-desc">Studies show 78% of customers buy from the first business that responds. If you're replying hours later, your competitor already closed that client.</p>
+    </div>
+    <div class="problem-item">
+      <div class="problem-icon">📭</div>
+      <div class="problem-title">Leads Fall Through the Cracks</div>
+      <p class="problem-desc">Enquiries come in through WhatsApp, email, your website, DMs. No system to track them. No follow-up. Money left on the table, every week.</p>
+    </div>
+    <div class="problem-item">
+      <div class="problem-icon">🔁</div>
+      <div class="problem-title">Follow-Up is Manual and Inconsistent</div>
+      <p class="problem-desc">You mean to chase that lead from Tuesday. You forget. They go cold. You've essentially paid for advertising and then thrown the result in the bin.</p>
+    </div>
+    <div class="problem-item">
+      <div class="problem-icon">💸</div>
+      <div class="problem-title">You're Paying for Leads You Don't Convert</div>
+      <p class="problem-desc">Whether it's ads, referrals, or organic traffic — if your follow-up system isn't airtight, you're spending money to fill a leaking bucket.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="solution">
+  <div class="solution-header">
+    <div>
+      <div class="sec-label">The Fix</div>
+      <h2 class="sec-title">One System.<br>Three Outcomes.</h2>
+    </div>
+    <p style="font-size:14px;color:rgba(237,235,230,.4);max-width:340px;line-height:1.7;font-weight:300">We don't sell software. We build a complete lead conversion system tailored to your specific business.</p>
+  </div>
+
+  <div class="solution-cards reveal">
+    <div class="sol-card">
+      <div class="sol-num">01 / 03</div>
+      <div class="sol-icon">⚡</div>
+      <div class="sol-title">Capture Every Lead</div>
+      <p class="sol-desc">An AI system that engages every visitor the moment they land on your site — asking the right questions, collecting contact details, and never letting anyone leave without a conversation.</p>
+      <div class="sol-outcome">→ Zero missed enquiries, day or night</div>
+    </div>
+    <div class="sol-card">
+      <div class="sol-num">02 / 03</div>
+      <div class="sol-icon">🎯</div>
+      <div class="sol-title">Qualify Automatically</div>
+      <p class="sol-desc">Not every lead is worth your time. Our system asks smart questions upfront — budget, timeline, service needed — and filters out tyre-kickers before they reach your inbox.</p>
+      <div class="sol-outcome">→ You only speak to serious, ready-to-buy clients</div>
+    </div>
+    <div class="sol-card">
+      <div class="sol-num">03 / 03</div>
+      <div class="sol-icon">🔄</div>
+      <div class="sol-title">Follow Up on Autopilot</div>
+      <p class="sol-desc">The system sends the right message at the right time — reminders, answers, booking links — automatically. No leads go cold. No follow-ups forgotten. Revenue stops leaking.</p>
+      <div class="sol-outcome">→ More closed deals without more work</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="sec-label">The Process</div>
+  <h2 class="sec-title">From Conversation<br>to Live System in Days.</h2>
+
+  <div class="how-steps reveal">
+    <div class="how-step">
+      <div class="how-step-num">01</div>
+      <div class="how-step-title">Discovery Call</div>
+      <p class="how-step-desc">We spend 30 minutes understanding your business, your clients, and exactly where you're losing leads right now.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">02</div>
+      <div class="how-step-title">Custom Build</div>
+      <p class="how-step-desc">We build your AI lead system from scratch — tailored to your tone, your services, and your clients. No templates, no shortcuts.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">03</div>
+      <div class="how-step-title">You Review It</div>
+      <p class="how-step-desc">We share a live preview. You test it, give feedback, and we refine until it sounds exactly like your brand.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">04</div>
+      <div class="how-step-title">Go Live</div>
+      <p class="how-step-desc">Your system goes live. Leads start getting captured, qualified, and followed up — automatically, from day one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="sec-label">Investment</div>
+  <h2 class="sec-title">Straightforward Pricing.<br>No Surprises.</h2>
+  <p class="sec-sub">Flat fees. 50% upfront to start, 50% on delivery. No ongoing retainers unless you want them.</p>
+
+  <div class="pricing-grid reveal">
+    <div class="p-card">
+      <div class="p-badge">Starter</div>
+      <div class="p-price">$300 <span class="p-per">flat</span></div>
+      <div class="p-name">Lead Capture Page</div>
+      <p class="p-desc">A fast, focused landing page with AI chat that captures and qualifies leads around the clock. Perfect for freelancers and service businesses just getting started online.</p>
+      <ul class="p-list">
+        <li>High-speed landing page</li>
+        <li>AI chat — active 24/7</li>
+        <li>Smart lead qualification</li>
+        <li>Leads delivered to WhatsApp or email</li>
+        <li>Mobile optimised</li>
+        <li>Delivered in 3 days</li>
+      </ul>
+      <div class="p-cta"><a href="#contact" class="btn-line" style="display:block;text-align:center">Get Started</a></div>
+    </div>
+
+    <div class="p-card star">
+      <div class="p-badge">★ Most Popular</div>
+      <div class="p-price">$750 <span class="p-per">flat</span></div>
+      <div class="p-name">Full Lead System</div>
+      <p class="p-desc">Everything in Starter, plus a complete business website, automated follow-up sequences, and a simple dashboard to track your leads. Built to convert at every stage.</p>
+      <ul class="p-list">
+        <li>Everything in Starter</li>
+        <li>Full multi-page website</li>
+        <li>Automated follow-up sequences</li>
+        <li>Lead tracking dashboard</li>
+        <li>WhatsApp + email integration</li>
+        <li>Basic SEO setup</li>
+        <li>Delivered in 7 days</li>
+      </ul>
+      <div class="p-cta"><a href="#contact" class="btn-gold" style="display:block;text-align:center">Get Started</a></div>
+    </div>
+
+    <div class="p-card">
+      <div class="p-badge">Scale</div>
+      <div class="p-price">$1,500 <span class="p-per">flat</span></div>
+      <div class="p-name">Agency System</div>
+      <p class="p-desc">For businesses ready to scale. The full lead system plus booking automation, CRM integration, monthly performance reporting, and 60 days of dedicated support.</p>
+      <ul class="p-list">
+        <li>Everything in Full System</li>
+        <li>Automated booking engine</li>
+        <li>CRM integration</li>
+        <li>Monthly performance reports</li>
+        <li>Priority support — direct access</li>
+        <li>60-day post-launch support</li>
+        <li>Delivered in 14 days</li>
+      </ul>
+      <div class="p-cta"><a href="#contact" class="btn-line" style="display:block;text-align:center">Get Started</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-body">
+    <div class="about-tag">Who's Behind This</div>
+    <h2 class="about-headline">
+      Built Lean.<br>
+      Delivered <span>Fast.</span>
+    </h2>
+    <p>I'm <strong>Fredrick</strong>, founder of Kravex. I build AI lead systems for businesses worldwide that want to grow without hiring more people or paying bloated agency fees.</p>
+    <p>Every system I build is <strong>custom to your business</strong> — your voice, your clients, your workflow. I work with a small number of clients at a time so every project gets my full attention. You talk to me directly, not an account manager.</p>
+    <p>I move fast because I have to. My reputation is built one client at a time. <strong>Your result is my portfolio.</strong></p>
+    <p class="gold" style="margin-top:20px;">
+  Limited availability — only a few systems built each month.
+</p>
+  </div>
+
+  <div class="about-right reveal">
+    <div class="trust-box">
+      <div class="trust-box-label">Avg Delivery Time</div>
+      <div class="trust-metric">3–7</div>
+      <div class="trust-metric-sub">Days from brief to live system</div>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-sm">
+        <div class="trust-box-label">Response</div>
+        <div class="trust-metric" style="font-size:32px">24hr</div>
+        <div class="trust-metric-sub">Guaranteed reply time</div>
+      </div>
+      <div class="trust-sm">
+        <div class="trust-box-label">Availability</div>
+        <div class="trust-metric" style="font-size:32px">24/7</div>
+        <div class="trust-metric-sub">Your system never sleeps</div>
+      </div>
+      <div class="trust-sm">
+        <div class="trust-box-label">Deposit</div>
+        <div class="trust-metric" style="font-size:32px">50%</div>
+        <div class="trust-metric-sub">Rest on delivery</div>
+      </div>
+      <div class="trust-sm">
+        <div class="trust-box-label">Built</div>
+        <div class="trust-metric" style="font-size:32px">100%</div>
+        <div class="trust-metric-sub">Custom. No templates.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-glow"></div>
+  <div class="sec-label" style="justify-content:center">Get In Touch</div>
+  <h2>
+    Let's Build<br>
+    Your <span>System.</span>
+  </h2>
+  <p class="contact-sub">
+    Tell me about your business. I'll tell you exactly what you need and what it costs. 
+    No pitch decks. No pressure. Just a straight conversation.
+  </p>
+
+  <div class="contact-cards reveal">
+    <a href="https://wa.me/2348146888691" class="c-card">
+      <div class="c-icon">💬</div>
+      <div class="c-label">Fastest Response</div>
+      <div class="c-val">WhatsApp Me</div>
+    </a>
+    <a href="mailto:fredrickworlu1000@gmail.com" class="c-card">
+      <div class="c-icon">✉️</div>
+      <div class="c-label">Email</div>
+      <div class="c-val">kravex.agency@gmail.com</div>
+    </a>
+    <a href="https://twitter.com/Freddy58791" class="c-card">
+      <div class="c-icon">𝕏</div>
+      <div class="c-label">Twitter / X</div>
+      <div class="c-val">@KravexHQ</div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Kra<b>vex</b></div>
+  <div class="footer-copy">© 2026 Kravex · AI Lead Systems · Worldwide</div>
+  <div class="footer-right">Remote · Worldwide</div>
+</footer>
+
+<script>
+// Cursor
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+
+// Reveal on scroll
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')});
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Stagger children of reveal elements
+document.querySelectorAll('.problem-grid .problem-item, .solution-cards .sol-card, .pricing-grid .p-card, .how-steps .how-step, .trust-grid .trust-sm, .contact-cards .c-card').forEach((el,i)=>{
+  el.style.transitionDelay=`${i*80}ms`;
+  el.classList.add('reveal');
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
